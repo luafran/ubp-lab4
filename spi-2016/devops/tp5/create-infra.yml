@@ -1,0 +1,16 @@
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  roles:
+    - create-vpc
+    - create-sec-groups
+    - create-instances
+
+  tasks:
+    - debug: var=vpc_id
+
+- hosts: frontend:services:mysql:rabbitmq
+  become: true
+  roles:
+    - update-hosts

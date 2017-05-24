@@ -1,0 +1,64 @@
+version: "2"
+services:
+  web:
+    build: frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-svc
+      - img-proc-api-svc
+      - storage-svc
+
+  auth-svc:
+    build: auth-svc
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_ENDPOINT: mysql
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: spi
+
+  img-proc-api-svc:
+    build: img-proc-api-svc
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+      - rabbitmq
+      - img-proc-worker-svc
+    environment:
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: spi
+
+  img-proc-worker-svc:
+    build: img-proc-worker-svc
+    depends_on:
+      - rabbitmq
+
+  storage-svc:
+    build: storage-svc
+    ports:
+      - "8083:8083"
+    volumes:
+      - /tmp/storage-svc:/usr/src/app/storage-svc/storage
+
+  mysql:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: spi
+
+  rabbitmq:
+    image: rabbitmq:3.6
+    ports:
+      - "5672:5672"

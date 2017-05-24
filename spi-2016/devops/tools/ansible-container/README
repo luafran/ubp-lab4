@@ -1,0 +1,8 @@
+# Building the docker image:
+docker build -t gseverina/ansible:1.0.0 .
+
+# Pushing the image to the registry:
+docker push gseverina/ansible:1.0.0
+
+# Running the image:
+docker run -v /home/gseverina/repos/ubp-lab4-2016/deploy/playbooks:/usr/playbooks -ti gseverina/ansible:1.0.0 sh

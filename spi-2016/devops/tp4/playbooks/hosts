@@ -1,0 +1,14 @@
+[intel-cloud]
+intel-cloud01 ansible_ssh_host=10.64.142.38 ansible_ssh_port=22
+intel-cloud02 ansible_ssh_host=10.64.143.21 ansible_ssh_port=22
+intel-cloud03 ansible_ssh_host=10.64.143.110 ansible_ssh_port=22
+
+[ubp-lab]
+ubp-lab01 ansible_ssh_host=192.168.14.5 ansible_ssh_port=22
+ubp-lab02 ansible_ssh_host=192.168.14.6 ansible_ssh_port=22
+ubp-lab03 ansible_ssh_host=192.168.14.2 ansible_ssh_port=22
+
+[aws]
+aws-01 ansible_ssh_host=52.67.129.41 ansible_ssh_port=22
+aws-02 ansible_ssh_host=52.67.207.122 ansible_ssh_port=22
+aws-03 ansible_ssh_host=52.67.26.132 ansible_ssh_port=22

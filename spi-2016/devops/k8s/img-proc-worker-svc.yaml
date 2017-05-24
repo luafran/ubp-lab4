@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: img-proc-worker-svc
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: img-proc-worker-svc
+        tier: backend
+    spec:
+      containers:
+      - name: img-proc-worker-svc
+        image: img-proc-worker-svc
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi

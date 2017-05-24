@@ -1,0 +1,21 @@
+<h1 align="center">SPI - NEW JOB</h1>
+<hr />
+{{#if error_message}}
+	<h2 style="color: red" align="center">{{error_message}}</h1>
+{{/if}}
+<center>
+	<!--form name="upload" action="http://storage-svc:8083/upload" method="post" enctype="multipart/form-data"-->
+	<form name="jobs" action="/jobs" method="post">
+	    <label>Filter:</label>
+        <select name="filterId" id="filterId">
+            <option>Filter 1</option>
+            <option>Filter 2</option>
+            <option>Filter 3</option>
+        </select>
+	    <br /><br />
+	    <label>Image:</label>
+        <input type="file" name="upload" id="upload" />
+	    <br /><br />
+	    <input type="submit" value="upload">
+	</form>
+</center>

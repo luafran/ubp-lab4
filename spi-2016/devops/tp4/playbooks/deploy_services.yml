@@ -1,0 +1,100 @@
+- name: containers deployment
+  #hosts: aws-01
+  hosts: intel-cloud02
+  become: true
+  tasks:
+    - name: Install the package "python-pip"
+      apt:
+        name: python-pip
+        state: present
+
+    - name: install docker-py
+      pip: name=docker-py version=1.7.0
+
+    - name: update etc/hosts
+      lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 frontend' line='127.0.0.1 frontend'
+    - lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 mysql' line='127.0.0.1 mysql'
+    - lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 auth-svc' line='127.0.0.1 auth-svc'
+    - lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 img-proc-api-svc' line='127.0.0.1 img-proc-api-svc'
+    - lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 img-proc-worker-svc' line='127.0.0.1 img-proc-worker-svc'
+    - lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 storage-svc' line='127.0.0.1 storage-svc'
+    - lineinfile: dest=/etc/hosts regexp='^127\.0\.0\.1 rabbitmq' line='127.0.0.1 rabbitmq'
+
+    - name: mysql-svc container
+      docker_container:
+        name: mysql-svc
+        image: gseverina/mysql-svc:1.0.0
+        state: started
+        network_mode: host
+        exposed_ports:
+          - "3306:3306"
+        volumes:
+          - /var/lib/mysql:/var/lib/mysql
+        env:
+          MYSQL_ROOT_PASSWORD: 123456
+          MYSQL_USER: dev
+          MYSQL_PASSWORD: 123456
+          MYSQL_DATABASE: spi
+
+    - name: frontend container
+      docker_container:
+        name: frontend
+        image: gseverina/frontend:1.0.0
+        state: started
+        network_mode: host
+        exposed_ports:
+          - "8080:8080"
+
+    - name: auth-svc container
+      docker_container:
+        name: auth-svc
+        image: gseverina/auth-svc:1.0.0
+        state: started
+        network_mode: host
+        exposed_ports:
+          - "8081:8081"
+        env:
+          MYSQL_ENDPOINT: mysql
+          MYSQL_USER: dev
+          MYSQL_PASSWORD: 123456
+          MYSQL_DATABASE: spi
+
+    - name: img-proc-api-svc container
+      docker_container:
+        name: img-proc-api-svc               
+        image: gseverina/img-proc-api-svc:1.0.0
+        state: started
+        network_mode: host
+        exposed_ports:
+          - "8082:8082"
+        env:                      
+          MYSQL_USER: dev
+          MYSQL_PASSWORD: 123456
+          MYSQL_DATABASE: spi
+
+    - name: img-proc-worker-svc container
+      docker_container:
+        name: img-proc-worker-svc
+        image: gseverina/img-proc-worker-svc:1.0.0
+        state: started
+        network_mode: host
+
+    - name: storage-svc
+      docker_container:
+        name: storage-svc
+        image: gseverina/storage-svc:1.0.0
+        state: started
+        network_mode: host
+        exposed_ports:
+          - "8083:8083"
+        volumes:
+          - /tmp/storage-svc:/tmp/storage-svc
+
+    - name: rabbitmq
+      docker_container:
+        name: storage-svc
+        image: gseverina/rabbitmq-svc:1.0.0
+        state: started
+        network_mode: host
+        exposed_ports:
+          - "5672:5672"

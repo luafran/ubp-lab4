@@ -1,0 +1,17 @@
+<h1 align="center">SPI - LOGIN</h1>
+<hr />
+{{#if error_message}}
+	<h2 style="color: red" align="center">{{error_message}}</h1>
+{{/if}}
+<center>
+	<form name="login" action="/login" method="post">
+	    <label>username:</label>
+	    <input type="text" name="username" id="username">
+	    <br /><br />
+	    <label>password:</label>
+	    <input type="password" name="password" id="username">
+	    <br /><br />
+	    <input type="submit" value="login">
+	    <a href="/register">register</a>
+	</form>
+</center>

@@ -1,0 +1,8 @@
+- name: rabbitmq
+  docker_container:
+    name: storage-svc
+    image: gseverina/rabbitmq-svc:1.0.0
+    network_mode: host
+    state: started
+    ports:
+      - "5672:5672"

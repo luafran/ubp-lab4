@@ -1,0 +1,8 @@
+- name: frontend container
+  docker_container:
+    name: frontend
+    image: gseverina/frontend:1.0.0
+    network_mode: host
+    state: started
+    ports:
+      - "8080:8080"
