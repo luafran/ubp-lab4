@@ -36,7 +36,7 @@ node_modules
 
 #python virtualenv directory
 venv
-.pyc
+*.pyc
 
 #database directory
 database
