@@ -1,6 +1,7 @@
 version: '2'
 
 services:
+
   prometheus:
     image: prom/prometheus
     ports:
@@ -8,6 +9,7 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus/data:/prometheus
+
   influxdb:
     image: influxdb:alpine
     ports:
