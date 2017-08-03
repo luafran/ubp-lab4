@@ -13,7 +13,6 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
-app.use(fileUpload());
 app.use(session({
     secret: 'mys3cr3t',
     resave: false,
@@ -34,6 +33,32 @@ app.get('/', function (req, res) {
 });
 
 app.get('/home', function(req, res) {
+
+    var sess = req.session
+    if (!sess.token) {
+        res.redirect('/login');
+        return;
+    }
+
+    var options = {
+      uri: 'http://jobs-frontend-svc:8082/jobs',
+      method: 'GET',
+
+      headers: {
+        "Accept": "application/json",
+        "Authorization": "Bearer " + sess.token
+      },
+
+      json: {}
+    };
+
+    request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        log.info(body);
+        log.debug(body.jobs);
+      }
+    });
+
     res.render('home')
 });
 
@@ -114,12 +139,17 @@ app.post('/login', function(req, res) {
         log.info(body);
         if(body.status == "OK") {
             sess.token = body.token
-            res.redirect('/dashboard');
+            res.redirect('/home');
         } else {
             res.redirect("/login/1");
         }
       }
     });
+});
+
+
+app.get('/createjob', function(req, res) {
+    res.render('upload');
 });
 
 /** TEST **/

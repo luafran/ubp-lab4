@@ -1,1 +1,27 @@
-<h1>HOME</h1>
+<h1 align="center">Jobs</h1>
+<hr />
+{{#if error_message}}
+	<h2 style="color: red" align="center">{{error_message}}</h2>
+{{/if}}
+<center>
+    <table>
+        <tr>
+            <th>Search Text</th>
+            <th>Duration</th>
+            <th>Count</th>
+            <th>Status</th>
+        </tr>
+{{#each jobs}}
+        <tr>
+            <td>{{this.text}}</td>
+            <td>{{this.duration}}</td>
+            <td>{{this.count}}</td>
+            <td>{{this.status}}</td>
+        <tr>
+{{/each}}
+    </table>
+</center>
+<hr />
+<form name="createjob" action="/createjob" method="GET">
+    <input type="submit" value="New Job">
+</form>

@@ -1,0 +1,15 @@
+<h1 align="center">SPI - NEW JOB</h1>
+<hr />
+{{#if error_message}}
+	<h2 style="color: red" align="center">{{error_message}}</h1>
+{{/if}}
+<center>
+	<form name="jobs" action="/jobs" method="post" enctype=multipart/form-data>
+	    <label>Search Text:</label>
+        <input type="text" name="text" />
+	    <br /><br />
+	    <label>Duration:</label>
+        <input type="text" name="duration" />
+	    <input type="submit" value="Create">
+	</form>
+</center>

@@ -57,7 +57,7 @@ def init_db():
         # cursor.execute(create_db)
         # cursor.close()
 
-        create_table = "create table if not exists spi.users(username varchar(50), password varchar(50))"
+        create_table = "create table if not exists spt.users(username varchar(50), password varchar(50))"
         cursor.execute(create_table)
         cursor.close()
 

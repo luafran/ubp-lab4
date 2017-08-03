@@ -74,6 +74,10 @@ def process_tweets_stream(http_resp):
         logger.debug('exception: {}'.format(ex))
 
 
+class BreakLoopException(Exception):
+    pass
+
+
 class MyStreamListener(tweepy.StreamListener):
 
     def __init__(self, duration):
@@ -92,28 +96,28 @@ class MyStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         logger.debug('on_status')
         now = time.time()
-        if now > self.end_time:
-            return False
-        else:
+        if now < self.end_time:
             logger.debug(status.text)
             self.count += 1
             return True
+        else:
+            logger.debug('should disconnect')
+            return False
 
     def keep_alive(self):
         logger.debug('keep_alive')
         now = time.time()
         if now > self.end_time:
-            return False
-        else:
-            return True
+            logger.debug('should disconnect')
+            raise BreakLoopException('break the loop!')
 
     def on_timeout(self):
         logger.debug('on_timeout')
         now = time.time()
-        if now > self.end_time:
-            return False
-        else:
+        if now < self.end_time:
             return True
+        else:
+            return False
 
     def on_error(self, status_code):
         logger.error('status_code: {}'.format(status_code))
@@ -130,8 +134,12 @@ def get_tweets_stream_2(tag, duration):
 
     my_stream_listener = MyStreamListener(duration)
     # Use small chunk_size to receive keep-alive from Twitter
-    my_stream = tweepy.Stream(auth=auth, listener=my_stream_listener, chunk_size=10)
-    my_stream.filter(track=[tag], async=False)
+    my_stream = tweepy.Stream(auth=auth, listener=my_stream_listener, chunk_size=5)
+    try:
+        my_stream.filter(track=[tag], async=False)
+    except BreakLoopException:
+        logger.debug('Got BreakLoopException')
+        pass
     my_stream.disconnect()
     logger.info('track: {}, duration: {}, count: {}'.format(tag, duration, my_stream_listener.count))
 
@@ -175,7 +183,7 @@ if __name__ == '__main__':
     tag_arg = args[1]
     duration_arg = int(args[2])
 
-    logger.debug('mode: {}, tag: {}, duration: {}'.format(mode, tag_arg, duration_arg))
+    logger.info('mode: {}, tag: {}, duration: {}'.format(mode, tag_arg, duration_arg))
 
     if mode == 'stream':
         resp = get_tweets_stream(tag_arg, duration_arg)

@@ -19,6 +19,18 @@ services:
       MYSQL_PASSWORD: 123456
       MYSQL_DATABASE: spt
 
+  jobs-frontend-svc:
+    build: jobs-frontend-svc
+    ports:
+      - "8082:8082"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_ENDPOINT: mysql
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: 123456
+      MYSQL_DATABASE: spt
+
   mysql:
     image: mysql:5.7
     ports:
