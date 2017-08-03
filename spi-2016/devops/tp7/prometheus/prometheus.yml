@@ -6,6 +6,10 @@ scrape_configs:
   - job_name: 'prometheus'
 
     static_configs:
-      - targets: ['localhost:9090', 'localhost:9100', 'localhost:9323']
+      - targets: ['localhost:9090', 'localhost:9323']
         labels:
           group: 'prometheus'
+
+  - job_name: "node"
+    static_configs:
+      - targets: ['localhost:9100']
